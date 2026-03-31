@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎁 Adél má narozeniny! 🎁</title>
+    <!-- Fonty -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">    <style>
+        /* CSS Proměnné */
+        :root {
+            --red-dark: #4a0506;   
+            --red-main: #9b111e;   
+            --red-light: #e63946;  
+            --bg-color: #f8f9fa;   
+            --text-dark: #212529;
+            --text-light: #ffffff;
+            --font-heading: 'Luckiest Guy', system-ui;
+            --font-body: 'Montserrat', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- 1. Hero sekce --- */
+        .hero {
+            background: linear-gradient(135deg, var(--red-dark) 0%, var(--red-main) 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(3rem, 10vw, 7rem);
+            margin: 0 0 20px 0;
+            line-height: 1.1;
+            letter-spacing: 0.05em;
+            z-index: 2;
+        }
+
+        .hero p {
+            font-size: clamp(1.1rem, 3vw, 1.5rem);
+            font-weight: 400;
+            max-width: 600px;
+            line-height: 1.2;
+            opacity: 0.9;
+            margin: 0;
+            z-index: 2;
+        }
+
+        /* --- Konfety a Dárky (Animace) --- */
+        .confetti-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Zabrání blokování kliknutí */
+            z-index: 1; /* Konfety létají pod textem */
+            overflow: hidden;
+        }
+
+        .confetti-piece {
+            position: absolute;
+            bottom: -100px; /* Začínají pod viditelnou částí obrazovky */
+            font-size: 2rem;
+            animation: toss infinite ease-in-out;
+            opacity: 0;
+            user-select: none;
+        }
+
+        /* Trajektorie: Výhoz nahoru a pád dolů */
+        @keyframes toss {
+            0% {
+                transform: translate3d(0, 0, 0) rotate(0deg) scale(0.5);
+                opacity: 0;
+            }
+            15% {
+                opacity: 1; /* Zviditelnění během letu nahoru */
+            }
+            40% {
+                /* Vrchol hodu - určený CSS proměnnými z JS */
+                transform: translate3d(var(--tx), var(--ty), 0) rotate(var(--rot)) scale(1.2);
+                opacity: 1;
+            }
+            100% {
+                /* Pád mimo obrazovku */
+                transform: translate3d(calc(var(--tx) * 1.5), 100vh, 0) rotate(calc(var(--rot) * 2)) scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* --- 2. Přání --- */
+        .wish {
+            padding: 100px 20px;
+            max-width: 700px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .wish h2 {
+            font-family: var(--font-heading);
+            color: var(--red-main);
+            font-size: clamp(2rem, 5vw, 3rem);
+            letter-spacing: 0.05em;
+            margin-top: 0;
+            line-height: 1.2;
+            margin-bottom: 40px;
+        }
+
+        .wish p {
+            font-size: 1.15rem;
+            color: #495057;
+            margin-bottom: 20px;
+        }
+
+        /* --- 3. Voucher Sekce --- */
+        .voucher-section {
+            background-color: #ededed;
+            padding: 100px 20px 120px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+        }
+
+        .voucher {
+            background-color: var(--text-light);
+            border-radius: 16px;
+            padding: 40px 40px;
+            max-width: 650px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15);
+            position: relative;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+
+
+        .voucher-inner {
+            border: 2px dashed var(--red-light);
+            border-radius: 8px;
+            padding: 20px 20px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* --- Místo pro obrázek --- */
+        .voucher-image {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background-color: #f1f3f5;
+            border-radius: 6px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #adb5bd;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            overflow: hidden;
+            border: 1px solid #dee2e6;
+        }
+
+        .voucher-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .voucher h3 {
+            font-family: var(--font-heading);
+            color: var(--red-dark);
+            font-size: 1.5rem;
+            margin: 0 0 10px 0;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            line-height: 1.2;
+        }
+
+        .voucher .destination {
+            font-family: var(--font-heading);
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-style: italic;
+            color: var(--red-main);
+            margin: 10px 0 20px 0;
+            line-height: 1;
+        }
+
+        .voucher p {
+            font-size: 1.1rem;
+            color: #6c757d;
+            max-width: 400px;
+            margin: 0 auto;
+            line-height: 1.2;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 40px;
+            padding: 16px 48px;
+            background-color: var(--red-main);
+            color: var(--text-light);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 10;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn:hover {
+            background-color: var(--red-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(155, 17, 30, 0.3);
+        }
+
+        .hidden-message {
+            display: none;
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #f1f1f1;
+            color: var(--red-dark);
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            line-height: 1.2;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- 4. Footer s Marquee --- */
+        .marquee-footer {
+            background-color: var(--text-dark);
+            color: var(--red-main);
+            padding: 20px 0;
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .marquee-content {
+            display: inline-block;
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            font-style: italic;
+            animation: scroll 20s linear infinite;
+        }
+
+        /* Duplikace obsahu pro plynulý nekonečný efekt */
+        .marquee-content span {
+            padding-right: 24px;
+        }
+
+        @keyframes scroll {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-100%, 0); }
+        }
+
+        @media (max-width: 600px) {
+            .voucher { padding: 20px 20px; }
+            .voucher-inner { padding: 20px 20px; }
+            .voucher::before, .voucher::after {
+                width: 30px; height: 30px;
+            }
+            .voucher::before { left: -15px; }
+            .voucher::after { right: -15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="hero">
+        <!-- Kontejner pro generované částice -->
+        <div id="confetti-container" class="confetti-container"></div>
+        
+        <h1>Lásko,<br>přeju Ti všechno nejlepší!</h1>
+        <p>Svět jde sice do háje,<br>ale my dva to dáme...<br><strong>SPOLU!</strong></p>
+    </header>
+
+    <section class="wish">
+        <h2>Jsi prostě nejlepšejší ❤️</h2>
+        <p>Svět venku je občas dost absurdní divadlo, ale s tebou je to všechno snesitelnější. Jsi prostě skvělá a nepřestává mě fascinovat tvoje odvaha. Hrozně moc Tě obdivuju za to, že jsi se rozhodla jít vlastní cestou.</p>
+        <p>Hledání sebe sama a toho, co má reálnou hodnotu, není vždycky jenom sluníčkový... je to cesta... a já ti na týhle cestě za sebepoznáním přeju jen to nejlepší.</p>
+        <p>A ať už tě zavede kamkoliv a ať už se rozhodneš pro cokoliv, jsem tu vždycky pro tebe, ať se děje, co se děje. Ty zkoušej, tvoř a objevuj, a o to ostatní se postarám.</p>
+        <p>Miluju tě, Beruško moje princeznatá! ❤️</p>
+    </section>
+
+
+    <section class="voucher-section">
+        <div class="voucher">
+            <div class="voucher-inner">
+                
+                <!-- Placeholder pro obrázek -->
+                <div class="voucher-image">
+                    <!-- Až budeš mít fotku, odkomentuj tento řádek a dej správnou cestu -->
+                    <!-- <img src="nase-fotka.jpg" alt="My dva"> -->
+                    <img src="https://travelbible.cz/wp-content/uploads/2024/03/porto-most-vecer.jpg" alt="Porto večer">
+                </div>
+
+                <h3>Voucher<br>na romantický víkend pro dva</h3>
+                <div class="destination">Porto</div>
+                <p>Poleťme si odpočinout...<br>Zažít trochu romantiky 🥰<br>Jen Ty a já! ❤️</p>
+                
+                <button id="revealBtn" class="btn">TAK KDY POLETÍME?</button>
+                <div id="flightMessage" class="hidden-message">
+                    Pojďme se domluvit jaký víkend se nám bude nejvíc hodit.<br>Pak už to nech na mně! 😇
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer s nekonečným textem -->
+    <footer class="marquee-footer">
+        <div class="marquee-content">
+            <!-- Text se opakuje víckrát, aby vyplnil i velké monitory -->
+            <span>lovjuju</span>
+            <span>big time</span>
+            <span>lovjuju</span>
+            <span>big time</span>
+            <span>lovjuju</span>
+            <span>big time</span>
+            <span>lovjuju</span>
+            <span>big time</span>
+            <span>lovjuju</span>
+            <span>big time</span>
+            <span>lovjuju</span>
+            <span>big time</span>
+        </div>
+    </footer>
+
+    <!-- Jednoduchý script pro zobrazení zprávy místo alertu -->
+    <!-- Skripty -->
+    <script>
+        // Odkrytí zprávy po kliknutí na tlačítko
+        document.getElementById('revealBtn').addEventListener('click', function() {
+            this.style.display = 'none';
+            document.getElementById('flightMessage').style.display = 'block';
+        });
+
+        // Generátor konfet a dárků
+        const confettiContainer = document.getElementById('confetti-container');
+        // Využíváme emoji pro rychlé a čisté vložení ikon (žádné tlusté SVG)
+        const items = ['🎁', '✨', '🎊', ' 🎈', '❤️', '🎉'];
+        const amount = 35; // Počet poletujících prvků
+
+        for (let i = 0; i < amount; i++) {
+            const el = document.createElement('div');
+            el.className = 'confetti-piece';
+            el.innerText = items[Math.floor(Math.random() * items.length)];
+
+            // Fyzika na oko: náhodná počáteční pozice, výška výhozu, rotace a zpoždění
+            const startX = Math.random() * 100; // 0 až 100% šířky
+            const tx = (Math.random() - 0.5) * 300; // Drift do stran (-150px až 150px)
+            const ty = - (Math.random() * 65 + 30); // Výhoz do výšky 30vh až 95vh
+            const rot = (Math.random() - 0.5) * 720; // Náhodná rotace (až 2 otočky)
+            const delay = Math.random() * 4; // Náhodné zpoždění, ať nelítají naráz
+            const duration = 3 + Math.random() * 2; // Doba letu (3 až 5 vteřin)
+
+            el.style.left = `${startX}vw`;
+            // Posíláme parametry do CSS animace
+            el.style.setProperty('--tx', `${tx}px`);
+            el.style.setProperty('--ty', `${ty}vh`);
+            el.style.setProperty('--rot', `${rot}deg`);
+            el.style.animationDelay = `${delay}s`;
+            el.style.animationDuration = `${duration}s`;
+
+            // Různé velikosti pro lepší vnímání hloubky
+            el.style.fontSize = `${1.5 + Math.random()}rem`;
+
+            confettiContainer.appendChild(el);
+        }
+    </script>
+
+</body>
+</html>
